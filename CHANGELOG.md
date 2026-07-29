@@ -1,43 +1,19 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+本文件记录 `gouno-agent-demo` 的重要变更。
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/),
-and this project adheres to [Semantic Versioning](https://semver.org/).
+格式遵循 [Keep a Changelog](https://keepachangelog.com/)，版本遵循 [Semantic Versioning](https://semver.org/)。
 
 ## [0.1.0] - 2026-07-29
 
 ### Added
 
-- Initialize the gouno-based secure Agent API demo project.
-- Add a constrained enterprise IT service-desk Agent with local FAQ retrieval, fixed system instructions, prompt-injection checks, out-of-scope refusal, and output safety checks.
-- Add unified synchronous JSON and SSE endpoints backed by OpenAI Responses API and Anthropic Messages API adapters.
-- Add gateway API-key authentication with bcrypt hashes, per-principal permissions and rate limits, bounded global IP rate limiting, and safe upstream host validation.
-- Add provider configuration through server-side YAML and environment variables, health/readiness endpoints, OpenAPI documentation, API/provider/security tests, and a quick-start README.
+- 初始化基于 gouno 的安全 Agent API Demo。
+- 添加受限企业 IT 服务台 Agent：本地 FAQ 检索、固定系统提示词、提示词攻击检测、范围外拒答和输出安全检查。
+- 添加统一的同步 JSON 与 SSE 接口，以及 OpenAI Responses API 和 Anthropic Messages API 适配。
+- 添加 bcrypt 网关 API Key、调用方权限与限流、全局 IP 限流和上游地址安全校验。
+- 添加服务端 YAML/环境变量配置、健康与就绪检查、OpenAPI 文档、自动化测试和快速启动文档。
 
 ### Changed
 
-- Upgrade gouno from v1.0.0 to v1.0.2 and use immutable error-response constructors.
-
-## [1.0.1] - 2026-06-13
-
-### Changed
-
-- Include complete module requirements and checksums so rendered projects can run Go tooling immediately.
-- Return configuration load and validation errors from `ConfigManager` instead of exiting inside the config package.
-- Add baseline configuration validation for generated projects.
-- Strengthen template verification to cover downloaded module checksums.
-
-## [1.0.0] - 2026-05-31
-
-### Added
-
-- Complete DDD project scaffold: `cmd/`, `config/`, `internal/` (domain, repository, service, task), `router/`, `middleware/`, `utility/`.
-- Cobra CLI with `web` and `generator` commands.
-- Viper multi-environment configuration (`development.yaml`, `test.yaml`, `production.yaml`).
-- `ConfigManager` thread-safe configuration singleton.
-- Gin web server with graceful shutdown.
-- `Makefile` with build, run, dev, test targets.
-- `.air.toml` for hot-reload development.
-- Code generation templates (`domain.tmpl`, `repository.tmpl`, `service.tmpl`, `controller.tmpl`, `task.tmpl`).
-- Bilingual README (English / Chinese).
+- 将 gouno 升级至 v1.0.2，并使用不可变错误响应构造函数。

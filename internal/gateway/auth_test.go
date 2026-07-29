@@ -8,9 +8,9 @@ import (
 
 func TestAuthenticateAuthorizeAndRateLimit(t *testing.T) {
 	hash, _ := bcrypt.GenerateFromPassword([]byte("a-long-test-key-1234"), bcrypt.MinCost)
-	auth := NewAuthorizer([]config.GatewayAPIKeyConfig{{ID: "demo", KeyHash: string(hash), AllowedProviders: []string{"openai"}, RateLimitPerMinute: 1}})
+	auth := NewAuthorizer([]config.GatewayAPIKeyConfig{{ID: "demo", KeyHash: string(hash), RateLimitPerMinute: 1}})
 	p, ok := auth.Authenticate("Bearer a-long-test-key-1234")
-	if !ok || !p.AllowedProviders["openai"] {
+	if !ok || p.ID != "demo" {
 		t.Fatal("expected authenticated OpenAI principal")
 	}
 	if !auth.Allow(p) || auth.Allow(p) {

@@ -15,6 +15,7 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gouno-agent-demo/config"
 	"gouno-agent-demo/internal/agent"
+	"gouno-agent-demo/internal/billing"
 	"gouno-agent-demo/internal/gateway"
 	"gouno-agent-demo/internal/httpapi"
 	"gouno-agent-demo/internal/provider"
@@ -86,7 +87,10 @@ func startWebServer(cmd *cobra.Command, args []string) {
 		}
 		providers[name] = client
 	}
-	agentHandler := httpapi.New(agent.New(providers), gateway.NewAuthorizer(globalConfig.GatewayConfig.APIKeys), globalConfig.GatewayConfig)
+	if _, ok := providers[globalConfig.GatewayConfig.DefaultProvider]; !ok {
+		log.Fatalf("default provider %q is not enabled", globalConfig.GatewayConfig.DefaultProvider)
+	}
+	agentHandler := httpapi.New(agent.New(providers, globalConfig.GatewayConfig.DefaultProvider), gateway.NewAuthorizer(globalConfig.GatewayConfig.APIKeys), globalConfig.GatewayConfig, billing.NewLoggingUsageRecorder(logger), logger)
 	router.RegisterWebRouter(engine, agentHandler)
 
 	httpServer := &http.Server{

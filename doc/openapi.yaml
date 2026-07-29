@@ -1,0 +1,37 @@
+openapi: 3.1.0
+info:
+  title: gouno secure agent demo
+  version: 1.0.0
+paths:
+  /v1/agent/messages:
+    post:
+      security: [{BearerAuth: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [provider, message]
+              properties:
+                provider: {type: string, enum: [openai, anthropic]}
+                message: {type: string, maxLength: 4000}
+                language: {type: string, enum: [zh-CN, en]}
+      responses:
+        '200': {description: Answer with an approved knowledge citation}
+        '401': {description: Missing or invalid gateway API key}
+        '403': {description: Provider is not allowed for this caller}
+        '422': {description: Rejected input, out-of-scope query, or unsafe output}
+  /v1/agent/messages/stream:
+    post:
+      security: [{BearerAuth: []}]
+      responses:
+        '200': {description: SSE events meta, delta, completed, error}
+  /healthz:
+    get: {responses: {'200': {description: Process is alive}}}
+  /readyz:
+    get: {responses: {'200': {description: At least one provider is configured}, '503': {description: No provider is configured}}}
+components:
+  securitySchemes:
+    BearerAuth: {type: http, scheme: bearer}

@@ -1,0 +1,65 @@
+web_server:
+    address: 0.0.0.0
+    port: 8080
+    idle_timeout: 60s
+    read_timeout: 5s
+    read_header_timeout: 2s
+    write_timeout: 30s
+    request_timeout: 10s
+    rate_limit_per_minute: 120
+    rate_limit_max_visitors: 10000
+gateway:
+    request_timeout: 45s
+    max_input_chars: 4000
+    allowed_upstream_hosts: [api.openai.com, api.anthropic.com]
+    api_keys: []
+    providers:
+        openai:
+            enabled: false
+            base_url: https://api.openai.com
+            api_key_env: OPENAI_API_KEY
+            model: gpt-5-mini
+        anthropic:
+            enabled: false
+            base_url: https://api.anthropic.com
+            api_key_env: ANTHROPIC_API_KEY
+            model: claude-sonnet-4-5
+            api_version: "2023-06-01"
+database:
+    default: postgres
+    drivers:
+        sqlite:
+            name: sqlite
+            driver: sqlite3
+            dsn: ./data/gouno-agent-demo.db
+            log_level: 1 #日志级别, 1:Silent 2:Error 3:Warn 4:Info
+        mysql:
+            name: mysql
+            driver: mysql
+            dsn: ${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(${MYSQL_HOST}:3306)/${MYSQL_DATABASE}?charset=utf8mb4&parseTime=True&loc=Local
+            log_level: 1 #日志级别, 1:Silent 2:Error 3:Warn 4:Info
+        postgres:
+            name: postgres
+            driver: pgx
+            dsn: host=${POSTGRES_HOST} user=${POSTGRES_USER} password=${POSTGRES_PASSWORD} dbname=${POSTGRES_DATABASE} port=5432 sslmode=disable TimeZone=Asia/Shanghai search_path=public
+            log_level: 1 #日志级别, 1:Silent 2:Error 3:Warn 4:Info
+redis:
+    dsn: ${REDIS_URL:redis://localhost:6379}
+    max_active_conns: 6000
+    pool_timeout_seconds: 60
+bigcache:
+    hard_max_cache_size: 6
+task_pipeline:
+    flush_size: 32
+    buffer_size: 64
+    flush_interval: 1s
+smtp:
+    host: ${SMTP_HOST:localhost}
+    port: ${SMTP_PORT:1025}
+    username: ${SMTP_USERNAME:}
+    password: ${SMTP_PASSWORD:}
+    from: ${SMTP_FROM:noreply@gouno-agent-demo.com}
+captcha:
+    type: math
+log:
+    level: 0 #日志级别, -1: Debug, 0: Info, 1: Warn, 2: Error, 3: DPanic, 4: Panic, 5: Fatal

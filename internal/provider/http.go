@@ -18,6 +18,7 @@ import (
 
 type HTTPProvider struct {
 	name, baseURL, key, model, version string
+	responsesStreamRequired            bool
 	client                             *http.Client
 }
 
@@ -46,7 +47,7 @@ func NewHTTPProvider(name string, cfg config.ProviderConfig, allowedHosts []stri
 	if cfg.Model == "" {
 		return nil, fmt.Errorf("%s: model is required", name)
 	}
-	return &HTTPProvider{name: name, baseURL: strings.TrimRight(cfg.BaseURL, "/"), key: key, model: cfg.Model, version: cfg.APIVersion, client: &http.Client{Timeout: timeout, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}}, nil
+	return &HTTPProvider{name: name, baseURL: strings.TrimRight(cfg.BaseURL, "/"), key: key, model: cfg.Model, version: cfg.APIVersion, responsesStreamRequired: cfg.ResponsesStreamRequired, client: &http.Client{Timeout: timeout, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}}, nil
 }
 
 func (p *HTTPProvider) Name() string { return p.name }

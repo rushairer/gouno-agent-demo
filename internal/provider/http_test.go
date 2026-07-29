@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"gouno-agent-demo/config"
 	"net"
@@ -28,8 +29,52 @@ func testServer(t *testing.T, handler http.Handler) (*httptest.Server, string) {
 func TestOpenAIResponsesRequestAndResponse(t *testing.T) {
 	t.Setenv("TEST_OPENAI_KEY", "secret")
 	_, serverURL := testServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/v1/responses" || r.Header.Get("Authorization") != "Bearer secret" {
+		if r.URL.Path != "/v1/responses" || r.Header.Get("Authorization") != "Bearer secret" || r.Header.Get("Accept") != "text/event-stream" {
 			t.Fatalf("unexpected request %s %s", r.URL.Path, r.Header.Get("Authorization"))
+		}
+		var body struct {
+			Stream bool `json:"stream"`
+			Input  []struct {
+				Role    string `json:"role"`
+				Content []struct {
+					Type string `json:"type"`
+					Text string `json:"text"`
+				} `json:"content"`
+			} `json:"input"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		if !body.Stream || len(body.Input) != 1 || body.Input[0].Role != "user" || len(body.Input[0].Content) != 1 || body.Input[0].Content[0].Type != "input_text" || body.Input[0].Content[0].Text != "VPN" {
+			t.Fatalf("unexpected Responses input: %+v", body.Input)
+		}
+		w.Header().Set("Content-Type", "text/event-stream")
+		_, _ = w.Write([]byte("data: {\"type\":\"response.output_text.delta\",\"delta\":\"ok\"}\n\ndata: {\"type\":\"response.completed\",\"response\":{\"usage\":{\"input_tokens\":2,\"output_tokens\":3}}}\n\n"))
+	}))
+	p, err := NewHTTPProvider("openai", config.ProviderConfig{Enabled: true, BaseURL: serverURL, APIKeyEnv: "TEST_OPENAI_KEY", Model: "test", ResponsesStreamRequired: true}, []string{"localhost"}, time.Second)
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, err := p.Generate(context.Background(), Request{Input: "VPN", Instructions: "safe"})
+	if err != nil || result.Text != "ok" || result.OutputTokens != 3 {
+		t.Fatalf("result=%+v err=%v", result, err)
+	}
+}
+
+func TestOpenAIResponsesGenerateIsNonStreamingByDefault(t *testing.T) {
+	t.Setenv("TEST_OPENAI_KEY", "secret")
+	_, serverURL := testServer(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Header.Get("Accept") == "text/event-stream" {
+			t.Fatal("unexpected SSE Accept header")
+		}
+		var body struct {
+			Stream *bool `json:"stream"`
+		}
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			t.Fatal(err)
+		}
+		if body.Stream != nil {
+			t.Fatalf("stream should be omitted by default, got %v", *body.Stream)
 		}
 		w.Header().Set("Content-Type", "application/json")
 		_, _ = w.Write([]byte(`{"output_text":"ok","usage":{"input_tokens":2,"output_tokens":3}}`))
@@ -39,7 +84,7 @@ func TestOpenAIResponsesRequestAndResponse(t *testing.T) {
 		t.Fatal(err)
 	}
 	result, err := p.Generate(context.Background(), Request{Input: "VPN", Instructions: "safe"})
-	if err != nil || result.Text != "ok" || result.OutputTokens != 3 {
+	if err != nil || result.Text != "ok" || result.InputTokens != 2 {
 		t.Fatalf("result=%+v err=%v", result, err)
 	}
 }

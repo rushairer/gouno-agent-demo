@@ -10,9 +10,8 @@ import (
 )
 
 type Principal struct {
-	ID               string
-	AllowedProviders map[string]bool
-	Limit            int
+	ID    string
+	Limit int
 }
 type Authorizer struct {
 	keys   []config.GatewayAPIKeyConfig
@@ -34,11 +33,7 @@ func (a *Authorizer) Authenticate(header string) (Principal, bool) {
 			continue
 		}
 		if bcrypt.CompareHashAndPassword([]byte(item.KeyHash), []byte(parts[1])) == nil {
-			providers := make(map[string]bool, len(item.AllowedProviders))
-			for _, provider := range item.AllowedProviders {
-				providers[provider] = true
-			}
-			return Principal{ID: item.ID, AllowedProviders: providers, Limit: item.RateLimitPerMinute}, true
+			return Principal{ID: item.ID, Limit: item.RateLimitPerMinute}, true
 		}
 	}
 	return Principal{}, false

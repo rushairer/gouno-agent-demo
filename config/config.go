@@ -31,26 +31,27 @@ type WebServerConfig struct {
 }
 
 type GatewayConfig struct {
-	RequestTimeout time.Duration             `mapstructure:"request_timeout"`
-	MaxInputChars  int                       `mapstructure:"max_input_chars"`
-	AllowedHosts   []string                  `mapstructure:"allowed_upstream_hosts"`
-	APIKeys        []GatewayAPIKeyConfig     `mapstructure:"api_keys"`
-	Providers      map[string]ProviderConfig `mapstructure:"providers"`
+	RequestTimeout  time.Duration             `mapstructure:"request_timeout"`
+	MaxInputChars   int                       `mapstructure:"max_input_chars"`
+	DefaultProvider string                    `mapstructure:"default_provider"`
+	AllowedHosts    []string                  `mapstructure:"allowed_upstream_hosts"`
+	APIKeys         []GatewayAPIKeyConfig     `mapstructure:"api_keys"`
+	Providers       map[string]ProviderConfig `mapstructure:"providers"`
 }
 
 type GatewayAPIKeyConfig struct {
-	ID                 string   `mapstructure:"id"`
-	KeyHash            string   `mapstructure:"key_hash"`
-	AllowedProviders   []string `mapstructure:"allowed_providers"`
-	RateLimitPerMinute int      `mapstructure:"rate_limit_per_minute"`
+	ID                 string `mapstructure:"id"`
+	KeyHash            string `mapstructure:"key_hash"`
+	RateLimitPerMinute int    `mapstructure:"rate_limit_per_minute"`
 }
 
 type ProviderConfig struct {
-	Enabled    bool   `mapstructure:"enabled"`
-	BaseURL    string `mapstructure:"base_url"`
-	APIKeyEnv  string `mapstructure:"api_key_env"`
-	Model      string `mapstructure:"model"`
-	APIVersion string `mapstructure:"api_version"`
+	Enabled                 bool   `mapstructure:"enabled"`
+	BaseURL                 string `mapstructure:"base_url"`
+	APIKeyEnv               string `mapstructure:"api_key_env"`
+	Model                   string `mapstructure:"model"`
+	APIVersion              string `mapstructure:"api_version"`
+	ResponsesStreamRequired bool   `mapstructure:"responses_stream_required"`
 }
 
 type DatabaseConfigDriverName string
@@ -146,6 +147,9 @@ func (c GoUnoConfig) Validate() error {
 	}
 	if c.GatewayConfig.RequestTimeout <= 0 || c.GatewayConfig.MaxInputChars <= 0 {
 		return fmt.Errorf("gateway: request_timeout and max_input_chars must be positive")
+	}
+	if c.GatewayConfig.DefaultProvider == "" {
+		return fmt.Errorf("gateway: default_provider is required")
 	}
 	if c.DatabaseConfig.GetDefaultDriver() == nil {
 		return fmt.Errorf("database: no default driver configured")

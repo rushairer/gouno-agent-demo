@@ -11,6 +11,7 @@ web_server:
 gateway:
     request_timeout: 45s
     max_input_chars: 4000
+    default_provider: openai
     allowed_upstream_hosts: [api.openai.com, api.anthropic.com]
     api_keys: []
     providers: {}

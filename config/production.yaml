@@ -11,6 +11,7 @@ web_server:
 gateway:
     request_timeout: 45s
     max_input_chars: 4000
+    default_provider: openai
     allowed_upstream_hosts: [api.openai.com, api.anthropic.com]
     api_keys: []
     providers:
@@ -19,6 +20,7 @@ gateway:
             base_url: https://api.openai.com
             api_key_env: OPENAI_API_KEY
             model: gpt-5-mini
+            responses_stream_required: false
         anthropic:
             enabled: false
             base_url: https://api.anthropic.com

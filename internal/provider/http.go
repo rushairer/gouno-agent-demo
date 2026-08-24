@@ -76,7 +76,7 @@ func (p *HTTPProvider) do(ctx context.Context, path string, body any, stream boo
 		return nil, err
 	}
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		defer resp.Body.Close()
+		defer func() { _ = resp.Body.Close() }()
 		limited, _ := io.ReadAll(io.LimitReader(resp.Body, 2048))
 		return nil, fmt.Errorf("upstream %s returned %d: %s", p.name, resp.StatusCode, strings.TrimSpace(string(limited)))
 	}

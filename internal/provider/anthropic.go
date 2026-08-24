@@ -19,7 +19,7 @@ func (p *HTTPProvider) anthropicGenerate(ctx context.Context, req Request) (Resu
 	if err != nil {
 		return Result{}, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	var decoded struct {
 		Content []struct{ Type, Text string } `json:"content"`
 		Usage   struct {
@@ -44,7 +44,7 @@ func (p *HTTPProvider) anthropicStream(ctx context.Context, req Request, onDelta
 	if err != nil {
 		return Result{}, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	err = readSSE(resp.Body, func(raw json.RawMessage) string {
 		var event struct {
 			Type  string                      `json:"type"`

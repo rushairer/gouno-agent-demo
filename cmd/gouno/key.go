@@ -26,7 +26,7 @@ var keyHashCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		fmt.Fprintln(cmd.OutOrStdout(), string(hash))
+		_, _ = fmt.Fprintln(cmd.OutOrStdout(), string(hash))
 		return nil
 	},
 }

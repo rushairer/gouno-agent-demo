@@ -43,7 +43,7 @@ func RecoveryMiddleware() gin.HandlerFunc {
 		func(ctx *gin.Context, err any) {
 			// Log the panic with stack trace for debugging
 			stack := string(debug.Stack())
-			ctx.Error(&gin.Error{
+			_ = ctx.Error(&gin.Error{
 				Err:  fmt.Errorf("panic recovered: %v\n%s", err, stack),
 				Type: gin.ErrorTypePrivate,
 			})

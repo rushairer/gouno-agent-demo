@@ -23,7 +23,7 @@ func (p *HTTPProvider) Generate(ctx context.Context, req Request) (Result, error
 	if err != nil {
 		return Result{}, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	return readOpenAIStream(resp.Body, func(string) error { return nil })
 }
 
@@ -32,7 +32,7 @@ func (p *HTTPProvider) openAINonStreamingGenerate(ctx context.Context, req Reque
 	if err != nil {
 		return Result{}, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	var decoded struct {
 		OutputText string `json:"output_text"`
 		Usage      struct {
@@ -57,7 +57,7 @@ func (p *HTTPProvider) Stream(ctx context.Context, req Request, onDelta func(str
 	if err != nil {
 		return Result{}, err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	return readOpenAIStream(resp.Body, onDelta)
 }
 

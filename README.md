@@ -17,7 +17,7 @@
 
 ## 快速启动
 
-前置条件：Go 1.23+，以及至少一个 OpenAI 或 Anthropic API Key。
+前置条件：Go 1.25.0+（CI 验证 Go 1.25.x 与 1.26.x；不再支持 Go 1.23/1.24），以及至少一个 OpenAI 或 Anthropic API Key。
 
 ### 1. 构建服务
 
@@ -198,6 +198,8 @@ router/                  Gin 路由
 go test ./...
 go vet ./...
 ```
+
+CI 使用伪造 transport 和本地 fixture，不调用真实 AI Provider，也不需要真实供应商或网关密钥。
 
 扩展为其他 Agent 时，优先替换 `internal/knowledge` 的受控检索与 `internal/agent` 的业务提示词；保留服务端凭据、调用方授权、上游白名单、fail-closed 和审计最小化边界。若接入数据库或 Redis 额度，应替换网关授权/限流实现，而不要让调用方提供上游密钥。
 

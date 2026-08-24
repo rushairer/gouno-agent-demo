@@ -4,6 +4,18 @@
 
 格式遵循 [Keep a Changelog](https://keepachangelog.com/)，版本遵循 [Semantic Versioning](https://semver.org/)。
 
+## [Unreleased]
+
+## [0.2.0] - 2026-08-24
+
+### Changed
+
+- 最低 Go 版本提升到 1.25.0，升级到 `gouno` v1.2.0，并在 Go 1.25.x 与 1.26.x 上验证。
+
+### Security
+
+- 增加 SHA 固定的共享 CI：格式、模块一致性、race、vet、可达漏洞扫描、lint 和 Conventional PR 标题门禁。
+
 ## [0.1.0] - 2026-07-29
 
 ### Added

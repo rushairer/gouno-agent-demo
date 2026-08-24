@@ -37,16 +37,24 @@ func NewConfigManager(
 	// 将 CLI flag 绑定到局部 viper 实例
 	if cmd != nil {
 		if f := cmd.Flags().Lookup("address"); f != nil {
-			v.BindPFlag("web_server.address", f)
+			if err := v.BindPFlag("web_server.address", f); err != nil {
+				return nil, fmt.Errorf("bind address flag: %w", err)
+			}
 		}
 		if f := cmd.Flags().Lookup("port"); f != nil {
-			v.BindPFlag("web_server.port", f)
+			if err := v.BindPFlag("web_server.port", f); err != nil {
+				return nil, fmt.Errorf("bind port flag: %w", err)
+			}
 		}
 		if f := cmd.Flags().Lookup("debug"); f != nil {
-			v.BindPFlag("web_server.debug", f)
+			if err := v.BindPFlag("web_server.debug", f); err != nil {
+				return nil, fmt.Errorf("bind debug flag: %w", err)
+			}
 		}
 		if f := cmd.Flags().Lookup("env"); f != nil {
-			v.BindPFlag("gouno_env", f)
+			if err := v.BindPFlag("gouno_env", f); err != nil {
+				return nil, fmt.Errorf("bind env flag: %w", err)
+			}
 		}
 	}
 

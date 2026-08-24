@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gouno-agent-demo-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    uses: rushairer/gouno-doc/.github/workflows/go-module-quality.yml@52147af0736efcc892422000f9369b331392c5c4 # gouno-doc v1.2.0
+  conventional-pr:
+    uses: rushairer/gouno-doc/.github/workflows/conventional-pr.yml@52147af0736efcc892422000f9369b331392c5c4 # gouno-doc v1.2.0

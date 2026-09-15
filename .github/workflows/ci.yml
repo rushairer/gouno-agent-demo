@@ -17,4 +17,4 @@ jobs:
   quality:
     uses: rushairer/gouno-doc/.github/workflows/go-module-quality.yml@52147af0736efcc892422000f9369b331392c5c4 # gouno-doc v1.2.0
   conventional-pr:
-    uses: rushairer/gouno-doc/.github/workflows/conventional-pr.yml@52147af0736efcc892422000f9369b331392c5c4 # gouno-doc v1.2.0
+    uses: rushairer/gouno-doc/.github/workflows/conventional-pr.yml@55d5ee2758457ffa3d7a550ed1176824e8e0f255 # gouno-doc v1.3.0

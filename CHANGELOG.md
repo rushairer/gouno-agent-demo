@@ -6,6 +6,14 @@
 
 ## [Unreleased]
 
+### Changed
+
+- 最低 Go 版本提升到 1.26.0，依赖公开发布的 Gouno Core v1.4.0；共享 CI 验证最新补丁 Go 1.26.x / 1.27.x。
+
+### Security
+
+- 将 HTTP/2 依赖基线提升到 x/net v0.60.0，并对齐 x/crypto v0.58.0、x/sys v0.49.0 和 x/text v0.43.0；保留 Agent、SSE 和 Provider 的现有行为。
+
 ## [0.2.0] - 2026-08-24
 
 ### Changed

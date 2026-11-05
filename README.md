@@ -17,7 +17,7 @@
 
 ## 快速启动
 
-前置条件：Go 1.25.0+（CI 验证 Go 1.25.x 与 1.26.x；不再支持 Go 1.23/1.24），以及至少一个 OpenAI 或 Anthropic API Key。
+前置条件：Go 1.26.0+（CI 验证最新补丁 Go 1.26.x 与 1.27.x；依赖 Gouno Core v1.4.0），以及至少一个 OpenAI 或 Anthropic API Key。
 
 ### 1. 构建服务
 

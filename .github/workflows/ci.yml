@@ -17,4 +17,4 @@ jobs:
   quality:
     uses: rushairer/gouno-doc/.github/workflows/go-module-quality.yml@2ee6c0fd9847648d3fc6a53de3d9627202e5cf46 # latest-patch Go 1.26.x / 1.27.x quality baseline
   conventional-pr:
-    uses: rushairer/gouno-doc/.github/workflows/conventional-pr.yml@2ee6c0fd9847648d3fc6a53de3d9627202e5cf46 # latest-patch Go 1.26.x / 1.27.x quality baseline
+    uses: rushairer/gouno-doc/.github/workflows/conventional-pr.yml@fad499f7f28ff2e86d03d5c26ae6de127222d915 # latest-patch Go 1.26.x / 1.27.x quality baseline
